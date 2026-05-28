@@ -17,6 +17,12 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "Control Inventario API"
     API_V1_STR: str = "/api/v1"
 
+    # Administrador maestro — se crea automáticamente si la BD está vacía.
+    # Cambia estas credenciales en .env antes del primer despliegue.
+    MASTER_ADMIN_USERNAME: str = "superadmiN"
+    MASTER_ADMIN_PASSWORD: str = "Admin1234!"
+    MASTER_ADMIN_EMAIL: str = "admin@soulline.com"
+
     @property
     def DATABASE_URL(self) -> str:
         return (

@@ -1,18 +1,47 @@
+import logging
+
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1.api import api_router
+from app.api.v1.middlewares.logging_middleware import LoggingMiddleware
 from app.core.config import settings
+from app.core.database import SessionLocal
+from app.core import seeder
+
+# Configuración básica de logging — muestra INFO en consola con timestamp
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s  %(levelname)-8s %(name)s — %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
+
+
+# ── Eventos de ciclo de vida ──────────────────────────────────────────────────
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """
+    Se ejecuta una sola vez cuando arranca el servidor.
+    Corre el seeder para garantizar que el admin maestro exista.
+    """
+    db = SessionLocal()
+    try:
+        seeder.run(db)
+    finally:
+        db.close()
+
+    yield
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
-    # La documentación interactiva estará en /docs
     docs_url="/docs",
     redoc_url="/redoc",
+    lifespan=lifespan
 )
 
-# CORS: permite que un frontend (ej. React en localhost:3000) llame a la API.
-# En producción cambia allow_origins a la URL real de tu frontend.
+# ── Middlewares ───────────────────────────────────────────────────────────────
+app.add_middleware(LoggingMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -21,7 +50,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Registrar todas las rutas de la v1 bajo /api/v1
+# ── Rutas ─────────────────────────────────────────────────────────────────────
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
 
