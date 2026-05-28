@@ -32,7 +32,7 @@ class RolRead(RolBase):
 
 
 # ── Usuario ───────────────────────────────────────────────────────────────────
-
+# todo para crear un usuario le esta exigiendo que diga que rol va a tener y el id de si mismo
 class UsuarioBase(BaseModel):
     nombre_usuario: str
     id_rol: int

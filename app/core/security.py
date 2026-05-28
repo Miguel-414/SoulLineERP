@@ -19,7 +19,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 
-def create_acceces_token(subject: Any) -> str:
+def create_access_token(subject: Any) -> str:
     """
     Crea un JWT (JSON Web Token).
 
@@ -34,7 +34,7 @@ def create_acceces_token(subject: Any) -> str:
     return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
 
-def decode_acceces_token(token: str) -> str:
+def decode_access_token(token: str) -> str:
     """
     Decodifica el JWT y retorna el 'sub' (nombre de usuario).
     Retorna None si el token es inválido o expiró.
