@@ -30,8 +30,15 @@ class Settings(BaseSettings):
             f"@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
         )
 
+    # para crear la base de datos en caso de que no exista
+
+    @property
+    def SERVER_URL(self) -> str:
+        return f"mysql+pymysql://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}"
+
     model_config = SettingsConfigDict(
         env_file='.env', env_file_encoding='utf-8')
 
 
 settings = Settings()
+print(settings.ACCESS_TOKEN_EXPIRE_MINUTES)

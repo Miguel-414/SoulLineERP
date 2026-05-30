@@ -15,12 +15,15 @@ from app.models.inventario import (
     Objeto,
     TipoActivo,
     Ubicacion,
+    ObjetoAcumulable
 )
 from app.schemas.inventario import (
     InventarioCreate,
     InventarioUpdate,
     ItemSerializadoCreate,
     ItemSerializadoUpdate,
+    ObjetoAcumulableCreate,
+    ObjetoAcumulableUpdate,
     ObjetoCreate,
     ObjetoUpdate,
     TipoActivoCreate,
@@ -138,8 +141,42 @@ def update_item_serializado(db: Session, id_item: int, data: ItemSerializadoUpda
     db.refresh(obj)
     return obj
 
+# ── ObjetoAcumulable ─────────────────────────────────────────────────────────────────
+
+# todo ? Por que hay tablas que no tienen aqui su metodo delete
+
+
+def get_objeto_acumulable(db: Session, id_acumulable: int) -> ObjetoAcumulable:
+    return db.get(ObjetoAcumulable, id_acumulable)
+
+
+def get_objetos_acumulable(db: Session, id_objeto: int | None = None, skip: int = 0, limit: int = 100) -> list[ObjetoAcumulable]:
+    q = db.query(ObjetoAcumulable)
+    if id_objeto:
+        q = q.filter(ObjetoAcumulable.id_objeto == id_objeto)
+    return q.offset(skip).limit(limit).all()
+
+
+def create_objeto_acumulable(db: Session, data: ObjetoAcumulableCreate) -> ObjetoAcumulable:
+    obj = ObjetoAcumulable(**data.model_dump())
+    db.add(obj)
+    db.commit()
+    db.refresh(obj)
+    return obj
+
+
+def update_objeto_acumulable(db: Session, id_acumulable: int, data: ObjetoAcumulableUpdate) -> ObjetoAcumulable | None:
+    obj = get_objeto_acumulable(db, id_acumulable)
+    if not obj:
+        return None
+    for field, value in data.model_dump(exclude_unset=True).items():
+        setattr(obj, field, value)
+    db.commit()
+    db.refresh(obj)
+    return obj
 
 # ── Ubicacion ─────────────────────────────────────────────────────────────────
+
 
 def get_ubicacion(db: Session, id_ubicacion: int) -> Ubicacion | None:
     return db.get(Ubicacion, id_ubicacion)

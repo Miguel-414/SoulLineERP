@@ -125,7 +125,31 @@ class UbicacionRead(UbicacionBase):
     model_config = ConfigDict(from_attributes=True)
 
 
+# ── ObjetoAcumulable ────────────────────────────────────────────────────────────────
+class ObjetoAcumulable(BaseModel):
+    id_objeto: int
+    cantidad: int
+    fecha_adquisicion: Optional[date] = None
+    forma_adquisicion: Optional[str] = None
+    id_factura: Optional[int] = None
+
+
+class ObjetoAcumulableCreate(ObjetoAcumulable):
+    pass
+
+
+class ObjetoAcumulableUpdate(BaseModel):
+    cantidad: Optional[int] = None
+    fecha_adquisicion: Optional[date] = None
+    forma_adquisicion: Optional[str] = None
+    id_factura: Optional[int] = None
+
+
+class ObjetoAcumulableRead(ObjetoAcumulable):
+    id_objeto_acumulable: int
+    model_config = ConfigDict(from_attributes=True)
 # ── Inventario ────────────────────────────────────────────────────────────────
+
 
 class InventarioBase(BaseModel):
     id_objeto: int
