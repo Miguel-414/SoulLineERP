@@ -15,7 +15,14 @@ El proyecto **Soul Line** está estructurado con un backend desarrollado en Pyth
 
 Antes de iniciar los servicios, es obligatorio configurar las variables de entorno. Dentro de la carpeta `backend`, encontrará un archivo llamado `.env.example`.
 
-Deberá crear una copia de ese archivo, renombrarla como `.env` y ajustar los valores según su configuración local dentro de la carpeta `backend`.
+Deberá crear una copia de ese archivo, renombrarla como `.env` y ajustar los valores según su configuración local dentro de la carpeta `backend`. Preste especial atención a las credenciales del Administrador Maestro, ya que con ellas podrá iniciar sesión por primera vez en la aplicación:
+
+```ini
+# credenciales por defecto
+MASTER_ADMIN_USERNAME="superadmin"
+MASTER_ADMIN_PASSWORD="Admin1234!"
+MASTER_ADMIN_EMAIL="admin@soulline.com"
+```
 
 ## Gestión de la Base de Datos
 
