@@ -41,4 +41,3 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
-print(settings.ACCESS_TOKEN_EXPIRE_MINUTES)

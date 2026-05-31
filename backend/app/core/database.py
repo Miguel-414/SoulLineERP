@@ -30,6 +30,14 @@ def script_sql(engine):
             flags=re.IGNORECASE
         )
 
+        # Para que la base de datos pueda ser levantada en xamp tengo que eliminar las palabras que no entiende
+        contenido_procesado = re.sub(
+            r"\b(VISIBLE|INVISIBLE)\b",
+            "",
+            contenido_procesado,
+            flags=re.IGNORECASE
+        )
+
         # Eliminar comandos que no voy a usar
         lineas = contenido_procesado.splitlines()
         lineas_limpias = []
@@ -66,7 +74,8 @@ def init_database():
         else:
             url_conexion += "&client_flag=65536"
 
-        temp_engine = create_engine(url_conexion)
+        temp_engine = create_engine(
+            url_conexion, connect_args={"client_flag": 65536})
         inspector = inspect(temp_engine)
         tablas_existentes = inspector.get_table_names()
 
