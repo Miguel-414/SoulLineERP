@@ -7,9 +7,20 @@ const MENU = [
     label: "Inventario",
     icon: <IconBox />,
     children: [
+      { label: "Gestionar Inventario", path: "/inventario" },
+      { label: "Items Serializados", path: "/items" },
       { label: "Objetos", path: "/objetos" },
-      { label: "Tipos Activo", path: "/tipos-activo" },
+      { label: "Tipos de Activo", path: "/tipos-activo" },
       { label: "Ubicaciones", path: "/ubicaciones" },
+    ],
+  },
+  {
+    label: "Movimientos",
+    // icon: <IconArrowsLeftRight />,
+    icon: <IconReceipt />,
+    children: [
+      { label: "Historial Movimientos", path: "/movimientos" },
+      { label: "Tipos de Movimiento", path: "/tipos-movimiento" },
     ],
   },
   {
@@ -21,7 +32,7 @@ const MENU = [
     ],
   },
   {
-    label: "Personal",
+    label: "Personal y Seguridad",
     icon: <IconUsers />,
     children: [
       { label: "Personas", path: "/personas" },

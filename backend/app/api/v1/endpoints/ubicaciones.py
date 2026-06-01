@@ -37,6 +37,20 @@ def crear_ubicacion(
     return crud_inventario.create_ubicacion(db, data)
 
 
+@router.patch("/inventario/{id_inventario}", response_model=InventarioRead)
+def actualizar_inventario(
+    id_inventario: int,
+    data: InventarioUpdate,
+    db: Session = Depends(get_db),
+    _: Usuario = Depends(get_current_user),
+):
+    obj = crud_inventario.update_inventario(db, id_inventario, data)
+    if not obj:
+        raise HTTPException(
+            status_code=404, detail="Registro de inventario no encontrado")
+    return obj
+
+
 @router.get("/{id_ubicacion}", response_model=UbicacionRead)
 def obtener_ubicacion(
     id_ubicacion: int,
@@ -74,6 +88,7 @@ def eliminar_ubicacion(
 
 # ── Inventario por ubicación ──────────────────────────────────────────────────
 
+
 @router.get("/{id_ubicacion}/inventario", response_model=list[InventarioRead])
 def inventario_por_ubicacion(
     id_ubicacion: int,
@@ -94,17 +109,3 @@ def crear_entrada_inventario(
 ):
     data.id_ubicacion = id_ubicacion
     return crud_inventario.create_inventario(db, data)
-
-
-@router.patch("/inventario/{id_inventario}", response_model=InventarioRead)
-def actualizar_inventario(
-    id_inventario: int,
-    data: InventarioUpdate,
-    db: Session = Depends(get_db),
-    _: Usuario = Depends(get_current_user),
-):
-    obj = crud_inventario.update_inventario(db, id_inventario, data)
-    if not obj:
-        raise HTTPException(
-            status_code=404, detail="Registro de inventario no encontrado")
-    return obj

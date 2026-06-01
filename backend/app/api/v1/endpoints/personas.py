@@ -90,6 +90,31 @@ def eliminar_persona(
 
 # ── Responsables de Objetos ───────────────────────────────────────────────
 
+@router.patch("/responsables-objeto/{id_responsable}", response_model=ResponsableObjetoRead)
+def actualizar_responsable_objeto(
+    id_responsable: int,
+    data: ResponsableObjetoUpdate,
+    db: Session = Depends(get_db),
+    _: Usuario = Depends(get_current_user),
+):
+    obj = crud_personal.update_responsable_objeto(db, id_responsable, data)
+    if not obj:
+        raise HTTPException(
+            status_code=404, detail="Responsable no encontrado")
+    return obj
+
+
+@router.delete("/responsables-objeto/{id_responsable}", status_code=status.HTTP_204_NO_CONTENT)
+def eliminar_responsable_objeto(
+    id_responsable: int,
+    db: Session = Depends(get_db),
+    _: Usuario = Depends(get_current_user),
+):
+    if not crud_personal.delete_responsable_objeto(db, id_responsable):
+        raise HTTPException(
+            status_code=404, detail="Responsable no encontrado")
+
+
 @router.get("/{id_persona}/responsabilidades-objeto", response_model=list[ResponsableObjetoRead])
 def listar_responsabilidades_objeto(
     id_persona: int,
@@ -112,30 +137,32 @@ def crear_responsable_objeto(
     return crud_personal.create_responsable_objeto(db, data)
 
 
-@router.patch("/responsables-objeto/{id_responsable}", response_model=ResponsableObjetoRead)
-def actualizar_responsable_objeto(
+# ── Responsables de Ubicaciones ───────────────────────────────────────────
+
+@router.patch("/responsables-ubicacion/{id_responsable}", response_model=ResponsableUbicacionRead)
+def actualizar_responsable_ubicacion(
     id_responsable: int,
-    data: ResponsableObjetoUpdate,
+    data: ResponsableUbicacionUpdate,
     db: Session = Depends(get_db),
     _: Usuario = Depends(get_current_user),
 ):
-    obj = crud_personal.update_responsable_objeto(db, id_responsable, data)
+    obj = crud_personal.update_responsable_ubicacion(db, id_responsable, data)
     if not obj:
-        raise HTTPException(status_code=404, detail="Responsable no encontrado")
+        raise HTTPException(
+            status_code=404, detail="Responsable no encontrado")
     return obj
 
 
-@router.delete("/responsables-objeto/{id_responsable}", status_code=status.HTTP_204_NO_CONTENT)
-def eliminar_responsable_objeto(
+@router.delete("/responsables-ubicacion/{id_responsable}", status_code=status.HTTP_204_NO_CONTENT)
+def eliminar_responsable_ubicacion(
     id_responsable: int,
     db: Session = Depends(get_db),
     _: Usuario = Depends(get_current_user),
 ):
-    if not crud_personal.delete_responsable_objeto(db, id_responsable):
-        raise HTTPException(status_code=404, detail="Responsable no encontrado")
+    if not crud_personal.delete_responsable_ubicacion(db, id_responsable):
+        raise HTTPException(
+            status_code=404, detail="Responsable no encontrado")
 
-
-# ── Responsables de Ubicaciones ───────────────────────────────────────────
 
 @router.get("/{id_persona}/responsabilidades-ubicacion", response_model=list[ResponsableUbicacionRead])
 def listar_responsabilidades_ubicacion(
@@ -157,26 +184,3 @@ def crear_responsable_ubicacion(
 ):
     data.id_persona = id_persona
     return crud_personal.create_responsable_ubicacion(db, data)
-
-
-@router.patch("/responsables-ubicacion/{id_responsable}", response_model=ResponsableUbicacionRead)
-def actualizar_responsable_ubicacion(
-    id_responsable: int,
-    data: ResponsableUbicacionUpdate,
-    db: Session = Depends(get_db),
-    _: Usuario = Depends(get_current_user),
-):
-    obj = crud_personal.update_responsable_ubicacion(db, id_responsable, data)
-    if not obj:
-        raise HTTPException(status_code=404, detail="Responsable no encontrado")
-    return obj
-
-
-@router.delete("/responsables-ubicacion/{id_responsable}", status_code=status.HTTP_204_NO_CONTENT)
-def eliminar_responsable_ubicacion(
-    id_responsable: int,
-    db: Session = Depends(get_db),
-    _: Usuario = Depends(get_current_user),
-):
-    if not crud_personal.delete_responsable_ubicacion(db, id_responsable):
-        raise HTTPException(status_code=404, detail="Responsable no encontrado")

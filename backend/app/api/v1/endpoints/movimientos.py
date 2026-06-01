@@ -48,7 +48,8 @@ def obtener_tipo_movimiento(
 ):
     obj = crud_inventario.get_tipo_movimiento(db, id_tipo)
     if not obj:
-        raise HTTPException(status_code=404, detail="Tipo de movimiento no encontrado")
+        raise HTTPException(
+            status_code=404, detail="Tipo de movimiento no encontrado")
     return obj
 
 
@@ -61,7 +62,8 @@ def actualizar_tipo_movimiento(
 ):
     obj = crud_inventario.update_tipo_movimiento(db, id_tipo, data)
     if not obj:
-        raise HTTPException(status_code=404, detail="Tipo de movimiento no encontrado")
+        raise HTTPException(
+            status_code=404, detail="Tipo de movimiento no encontrado")
     return obj
 
 
@@ -72,7 +74,8 @@ def eliminar_tipo_movimiento(
     _: Usuario = Depends(get_current_user),
 ):
     if not crud_inventario.delete_tipo_movimiento(db, id_tipo):
-        raise HTTPException(status_code=404, detail="Tipo de movimiento no encontrado")
+        raise HTTPException(
+            status_code=404, detail="Tipo de movimiento no encontrado")
 
 
 # ── Movimientos ───────────────────────────────────────────────────────────
@@ -134,6 +137,31 @@ def eliminar_movimiento(
 
 # ── Detalles de Movimiento ────────────────────────────────────────────────
 
+@router.patch("/detalles/{id_detalle}", response_model=DetalleMovimientoRead)
+def actualizar_detalle_movimiento(
+    id_detalle: int,
+    data: DetalleMovimientoUpdate,
+    db: Session = Depends(get_db),
+    _: Usuario = Depends(get_current_user),
+):
+    obj = crud_inventario.update_detalle_movimiento(db, id_detalle, data)
+    if not obj:
+        raise HTTPException(
+            status_code=404, detail="Detalle de movimiento no encontrado")
+    return obj
+
+
+@router.delete("/detalles/{id_detalle}", status_code=status.HTTP_204_NO_CONTENT)
+def eliminar_detalle_movimiento(
+    id_detalle: int,
+    db: Session = Depends(get_db),
+    _: Usuario = Depends(get_current_user),
+):
+    if not crud_inventario.delete_detalle_movimiento(db, id_detalle):
+        raise HTTPException(
+            status_code=404, detail="Detalle de movimiento no encontrado")
+
+
 @router.get("/{id_movimiento}/detalles", response_model=list[DetalleMovimientoRead])
 def listar_detalles(
     id_movimiento: int,
@@ -154,26 +182,3 @@ def crear_detalle_movimiento(
 ):
     data.id_movimiento = id_movimiento
     return crud_inventario.create_detalle_movimiento(db, data)
-
-
-@router.patch("/detalles/{id_detalle}", response_model=DetalleMovimientoRead)
-def actualizar_detalle_movimiento(
-    id_detalle: int,
-    data: DetalleMovimientoUpdate,
-    db: Session = Depends(get_db),
-    _: Usuario = Depends(get_current_user),
-):
-    obj = crud_inventario.update_detalle_movimiento(db, id_detalle, data)
-    if not obj:
-        raise HTTPException(status_code=404, detail="Detalle de movimiento no encontrado")
-    return obj
-
-
-@router.delete("/detalles/{id_detalle}", status_code=status.HTTP_204_NO_CONTENT)
-def eliminar_detalle_movimiento(
-    id_detalle: int,
-    db: Session = Depends(get_db),
-    _: Usuario = Depends(get_current_user),
-):
-    if not crud_inventario.delete_detalle_movimiento(db, id_detalle):
-        raise HTTPException(status_code=404, detail="Detalle de movimiento no encontrado")

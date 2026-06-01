@@ -81,6 +81,67 @@ def eliminar_tipo_activo(
             status_code=404, detail="Tipo de activo no encontrado")
 
 
+# ── Items Serializados ────────────────────────────────────────────────────────
+
+# lista todos los items serailizados
+@router.get("/items", response_model=list[ItemSerializadoRead])
+def listar_items(
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db),
+    _: Usuario = Depends(get_current_user),
+):
+    return crud_inventario.get_items_serializados(db, skip=skip, limit=limit)
+
+
+@router.patch("/items/{id_item}", response_model=ItemSerializadoRead)
+def actualizar_item(
+    id_item: int,
+    data: ItemSerializadoUpdate,
+    db: Session = Depends(get_db),
+    _: Usuario = Depends(get_current_user),
+):
+    obj = crud_inventario.update_item_serializado(db, id_item, data)
+    if not obj:
+        raise HTTPException(
+            status_code=404, detail="Item serializado no encontrado")
+    return obj
+
+# Elimina un item serializado en especifico
+
+
+@router.delete("/items/{id_item}", status_code=status.HTTP_204_NO_CONTENT)
+def eliminar_item(
+    id_item: int,
+    db: Session = Depends(get_db),
+    _: Usuario = Depends(get_current_user),
+):
+    if not crud_inventario.delete_item_serializado(db, id_item):
+        raise HTTPException(
+            status_code=404, detail="Item serializado no encontrado")
+
+
+# todo ni la serie ni la placa pueden estar repetidos o si no error 500
+@router.post("/{id_objeto}/items", response_model=ItemSerializadoRead, status_code=status.HTTP_201_CREATED)
+def crear_item(
+    id_objeto: int,
+    data: ItemSerializadoCreate,
+    db: Session = Depends(get_db),
+    _: Usuario = Depends(get_current_user),
+):
+    data.id_objeto = id_objeto
+    return crud_inventario.create_item_serializado(db, data)
+
+
+@router.get("/{id_objeto}/items", response_model=list[ItemSerializadoRead])
+def listar_items_por_objeto(
+    id_objeto: int,
+    db: Session = Depends(get_db),
+    _: Usuario = Depends(get_current_user),
+):
+    return crud_inventario.get_item_serializado(db, id_objeto=id_objeto)
+
+
 # ── Objetos ───────────────────────────────────────────────────────────────────
 
 @router.get("/", response_model=list[ObjetoRead])
@@ -137,89 +198,7 @@ def eliminar_objeto(
         raise HTTPException(status_code=404, detail="Objeto no encontrado")
 
 
-# ── Items Serializados ────────────────────────────────────────────────────────
-
-# lista todos los items serailizados
-@router.get("/items", response_model=list[ItemSerializadoRead])
-def listar_items(
-    skip: int = 0,
-    limit: int = 100,
-    db: Session = Depends(get_db),
-    _: Usuario = Depends(get_current_user),
-):
-    return crud_inventario.get_items_serializados(db, skip=skip, limit=limit)
-
-
-@router.post("/{id_objeto}/items", response_model=ItemSerializadoRead, status_code=status.HTTP_201_CREATED)
-def crear_item(
-    id_objeto: int,
-    data: ItemSerializadoCreate,
-    db: Session = Depends(get_db),
-    _: Usuario = Depends(get_current_user),
-):
-    data.id_objeto = id_objeto
-    return crud_inventario.create_item_serializado(db, data)
-
-
-@router.get("/{id_objeto}/items", response_model=list[ItemSerializadoRead])
-def listar_items_por_objeto(
-    id_objeto: int,
-    db: Session = Depends(get_db),
-    _: Usuario = Depends(get_current_user),
-):
-    return crud_inventario.get_item_serializado(db, id_objeto=id_objeto)
-
-
-@router.patch("/items/{id_item}", response_model=ItemSerializadoRead)
-def actualizar_item(
-    id_item: int,
-    data: ItemSerializadoUpdate,
-    db: Session = Depends(get_db),
-    _: Usuario = Depends(get_current_user),
-):
-    obj = crud_inventario.update_item_serializado(db, id_item, data)
-    if not obj:
-        raise HTTPException(
-            status_code=404, detail="Item serializado no encontrado")
-    return obj
-
-# Elimina un item serializado en especifico
-
-
-@router.delete("/items/{id_item}", status_code=status.HTTP_204_NO_CONTENT)
-def eliminar_item(
-    id_item: int,
-    db: Session = Depends(get_db),
-    _: Usuario = Depends(get_current_user),
-):
-    if not crud_inventario.delete_item_serializado(db, id_item):
-        raise HTTPException(
-            status_code=404, detail="Item serializado no encontrado")
-
-
 # ── Objetos Acumulables ──────────────────────────────────────────────────────
-
-@router.get("/{id_objeto}/acumulables", response_model=list[ObjetoAcumulableRead])
-def listar_acumulables(
-    id_objeto: int,
-    skip: int = 0,
-    limit: int = 100,
-    db: Session = Depends(get_db),
-    _: Usuario = Depends(get_current_user),
-):
-    return crud_inventario.get_objetos_acumulable(db, id_objeto=id_objeto, skip=skip, limit=limit)
-
-
-@router.post("/{id_objeto}/acumulables", response_model=ObjetoAcumulableRead, status_code=status.HTTP_201_CREATED)
-def crear_acumulable(
-    id_objeto: int,
-    data: ObjetoAcumulableCreate,
-    db: Session = Depends(get_db),
-    _: Usuario = Depends(get_current_user),
-):
-    data.id_objeto = id_objeto
-    return crud_inventario.create_objeto_acumulable(db, data)
-
 
 @router.get("/acumulables/{id_acumulable}", response_model=ObjetoAcumulableRead)
 def obtener_acumulable(
@@ -257,3 +236,25 @@ def eliminar_acumulable(
     if not crud_inventario.delete_objeto_acumulable(db, id_acumulable):
         raise HTTPException(
             status_code=404, detail="Objeto acumulable no encontrado")
+
+
+@router.get("/{id_objeto}/acumulables", response_model=list[ObjetoAcumulableRead])
+def listar_acumulables(
+    id_objeto: int,
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db),
+    _: Usuario = Depends(get_current_user),
+):
+    return crud_inventario.get_objetos_acumulable(db, id_objeto=id_objeto, skip=skip, limit=limit)
+
+
+@router.post("/{id_objeto}/acumulables", response_model=ObjetoAcumulableRead, status_code=status.HTTP_201_CREATED)
+def crear_acumulable(
+    id_objeto: int,
+    data: ObjetoAcumulableCreate,
+    db: Session = Depends(get_db),
+    _: Usuario = Depends(get_current_user),
+):
+    data.id_objeto = id_objeto
+    return crud_inventario.create_objeto_acumulable(db, data)
