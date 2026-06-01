@@ -15,7 +15,10 @@ from app.models.inventario import (
     Objeto,
     TipoActivo,
     Ubicacion,
-    ObjetoAcumulable
+    ObjetoAcumulable,
+    TipoMovimiento,
+    Movimiento,
+    DetalleMovimiento,
 )
 from app.schemas.inventario import (
     InventarioCreate,
@@ -30,6 +33,12 @@ from app.schemas.inventario import (
     TipoActivoUpdate,
     UbicacionCreate,
     UbicacionUpdate,
+    TipoMovimientoCreate,
+    TipoMovimientoUpdate,
+    MovimientoCreate,
+    MovimientoUpdate,
+    DetalleMovimientoCreate,
+    DetalleMovimientoUpdate,
 )
 
 
@@ -141,6 +150,15 @@ def update_item_serializado(db: Session, id_item: int, data: ItemSerializadoUpda
     db.refresh(obj)
     return obj
 
+
+def delete_item_serializado(db: Session, id_item: int) -> bool:
+    obj = get_item_serializado(db, id_item)
+    if not obj:
+        return False
+    db.delete(obj)
+    db.commit()
+    return True
+
 # ── ObjetoAcumulable ─────────────────────────────────────────────────────────────────
 
 # todo ? Por que hay tablas que no tienen aqui su metodo delete
@@ -174,6 +192,15 @@ def update_objeto_acumulable(db: Session, id_acumulable: int, data: ObjetoAcumul
     db.commit()
     db.refresh(obj)
     return obj
+
+
+def delete_objeto_acumulable(db: Session, id_acumulable: int) -> bool:
+    obj = get_objeto_acumulable(db, id_acumulable)
+    if not obj:
+        return False
+    db.delete(obj)
+    db.commit()
+    return True
 
 # ── Ubicacion ─────────────────────────────────────────────────────────────────
 
@@ -244,3 +271,123 @@ def update_inventario(db: Session, id_inventario: int, data: InventarioUpdate) -
     db.commit()
     db.refresh(obj)
     return obj
+
+
+# ── TipoMovimiento ────────────────────────────────────────────────────────
+
+def get_tipo_movimiento(db: Session, id_tipo_movimiento: int) -> TipoMovimiento | None:
+    return db.get(TipoMovimiento, id_tipo_movimiento)
+
+
+def get_tipos_movimiento(db: Session, skip: int = 0, limit: int = 100) -> list[TipoMovimiento]:
+    return db.query(TipoMovimiento).offset(skip).limit(limit).all()
+
+
+def create_tipo_movimiento(db: Session, data: TipoMovimientoCreate) -> TipoMovimiento:
+    obj = TipoMovimiento(**data.model_dump())
+    db.add(obj)
+    db.commit()
+    db.refresh(obj)
+    return obj
+
+
+def update_tipo_movimiento(db: Session, id_tipo_movimiento: int, data: TipoMovimientoUpdate) -> TipoMovimiento | None:
+    obj = get_tipo_movimiento(db, id_tipo_movimiento)
+    if not obj:
+        return None
+    for field, value in data.model_dump(exclude_unset=True).items():
+        setattr(obj, field, value)
+    db.commit()
+    db.refresh(obj)
+    return obj
+
+
+def delete_tipo_movimiento(db: Session, id_tipo_movimiento: int) -> bool:
+    obj = get_tipo_movimiento(db, id_tipo_movimiento)
+    if not obj:
+        return False
+    db.delete(obj)
+    db.commit()
+    return True
+
+
+# ── Movimiento ────────────────────────────────────────────────────────────
+
+def get_movimiento(db: Session, id_movimiento: int) -> Movimiento | None:
+    return db.get(Movimiento, id_movimiento)
+
+
+def get_movimientos(db: Session, id_tipo_movimiento: int | None = None, skip: int = 0, limit: int = 100) -> list[Movimiento]:
+    q = db.query(Movimiento)
+    if id_tipo_movimiento:
+        q = q.filter(Movimiento.id_tipo_movimiento == id_tipo_movimiento)
+    return q.offset(skip).limit(limit).all()
+
+
+def create_movimiento(db: Session, data: MovimientoCreate) -> Movimiento:
+    obj = Movimiento(**data.model_dump())
+    db.add(obj)
+    db.commit()
+    db.refresh(obj)
+    return obj
+
+
+def update_movimiento(db: Session, id_movimiento: int, data: MovimientoUpdate) -> Movimiento | None:
+    obj = get_movimiento(db, id_movimiento)
+    if not obj:
+        return None
+    for field, value in data.model_dump(exclude_unset=True).items():
+        setattr(obj, field, value)
+    db.commit()
+    db.refresh(obj)
+    return obj
+
+
+def delete_movimiento(db: Session, id_movimiento: int) -> bool:
+    obj = get_movimiento(db, id_movimiento)
+    if not obj:
+        return False
+    db.delete(obj)
+    db.commit()
+    return True
+
+
+# ── DetalleMovimiento ─────────────────────────────────────────────────────
+
+def get_detalle_movimiento(db: Session, id_detalle: int) -> DetalleMovimiento | None:
+    return db.get(DetalleMovimiento, id_detalle)
+
+
+def get_detalles_movimiento(db: Session, id_movimiento: int | None = None, skip: int = 0, limit: int = 100) -> list[DetalleMovimiento]:
+    q = db.query(DetalleMovimiento)
+    if id_movimiento:
+        q = q.filter(DetalleMovimiento.id_movimiento == id_movimiento)
+    return q.offset(skip).limit(limit).all()
+
+
+def create_detalle_movimiento(db: Session, data: DetalleMovimientoCreate) -> DetalleMovimiento:
+    obj = DetalleMovimiento(**data.model_dump())
+    db.add(obj)
+    db.commit()
+    db.refresh(obj)
+    return obj
+
+
+def update_detalle_movimiento(db: Session, id_detalle: int, data: DetalleMovimientoUpdate) -> DetalleMovimiento | None:
+    obj = get_detalle_movimiento(db, id_detalle)
+    if not obj:
+        return None
+    for field, value in data.model_dump(exclude_unset=True).items():
+        setattr(obj, field, value)
+    db.commit()
+    db.refresh(obj)
+    return obj
+
+
+def delete_detalle_movimiento(db: Session, id_detalle: int) -> bool:
+    obj = get_detalle_movimiento(db, id_detalle)
+    if not obj:
+        return False
+    db.delete(obj)
+    db.commit()
+    return True

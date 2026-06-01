@@ -175,6 +175,7 @@ class ObjetoAcumulable(Base):
 
     objeto: Mapped["Objeto"] = relationship(
         "Objeto", back_populates="objetos_acumulables")
+    factura: Mapped["Factura | None"] = relationship("Factura", foreign_keys=[id_factura])  # type: ignore[name-defined]  # noqa: F821
 
 
 class TipoMovimiento(Base):
@@ -233,3 +234,14 @@ class DetalleMovimiento(Base):
 
     movimiento: Mapped["Movimiento"] = relationship(
         "Movimiento", back_populates="detalles")
+    objeto: Mapped["Objeto"] = relationship("Objeto")
+    item_serializado: Mapped["ItemSerializado | None"] = relationship(
+        "ItemSerializado")
+    inventario_origen: Mapped["Inventario | None"] = relationship(
+        "Inventario", foreign_keys=[id_inventario_origen])
+    inventario_destino: Mapped["Inventario | None"] = relationship(
+        "Inventario", foreign_keys=[id_inventario_destino])
+    ubicacion_origen: Mapped["Ubicacion | None"] = relationship(
+        "Ubicacion", foreign_keys=[id_ubicacion_origen])
+    ubicacion_destino: Mapped["Ubicacion"] = relationship(
+        "Ubicacion", foreign_keys=[id_ubicacion_destino])

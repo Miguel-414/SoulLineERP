@@ -125,8 +125,9 @@ class UbicacionRead(UbicacionBase):
     model_config = ConfigDict(from_attributes=True)
 
 
-# ── ObjetoAcumulable ────────────────────────────────────────────────────────────────
-class ObjetoAcumulable(BaseModel):
+# ── ObjetoAcumulable ──────────────────────────────────────────────────────────
+
+class ObjetoAcumulableBase(BaseModel):
     id_objeto: int
     cantidad: int
     fecha_adquisicion: Optional[date] = None
@@ -134,7 +135,7 @@ class ObjetoAcumulable(BaseModel):
     id_factura: Optional[int] = None
 
 
-class ObjetoAcumulableCreate(ObjetoAcumulable):
+class ObjetoAcumulableCreate(ObjetoAcumulableBase):
     pass
 
 
@@ -145,8 +146,9 @@ class ObjetoAcumulableUpdate(BaseModel):
     id_factura: Optional[int] = None
 
 
-class ObjetoAcumulableRead(ObjetoAcumulable):
+class ObjetoAcumulableRead(ObjetoAcumulableBase):
     id_objeto_acumulable: int
+    fecha_registro: datetime
     model_config = ConfigDict(from_attributes=True)
 # ── Inventario ────────────────────────────────────────────────────────────────
 
@@ -173,4 +175,75 @@ class InventarioUpdate(BaseModel):
 
 class InventarioRead(InventarioBase):
     id_inventario: int
+    model_config = ConfigDict(from_attributes=True)
+
+
+# ── TipoMovimiento ────────────────────────────────────────────────────────
+
+class TipoMovimientoBase(BaseModel):
+    nombre: str
+    descripcion: str
+
+
+class TipoMovimientoCreate(TipoMovimientoBase):
+    pass
+
+
+class TipoMovimientoUpdate(BaseModel):
+    nombre: Optional[str] = None
+    descripcion: Optional[str] = None
+
+
+class TipoMovimientoRead(TipoMovimientoBase):
+    id_tipo_movimiento: int
+    model_config = ConfigDict(from_attributes=True)
+
+
+# ── Movimiento ────────────────────────────────────────────────────────────
+
+class MovimientoBase(BaseModel):
+    fecha_movimiento: date
+    id_tipo_movimiento: int
+
+
+class MovimientoCreate(MovimientoBase):
+    pass
+
+
+class MovimientoUpdate(BaseModel):
+    fecha_movimiento: Optional[date] = None
+    id_tipo_movimiento: Optional[int] = None
+
+
+class MovimientoRead(MovimientoBase):
+    id_movimiento: int
+    model_config = ConfigDict(from_attributes=True)
+
+
+# ── DetalleMovimiento ─────────────────────────────────────────────────────
+
+class DetalleMovimientoBase(BaseModel):
+    id_movimiento: int
+    id_objeto: int
+    id_item_serializado: Optional[int] = None
+    id_inventario_origen: Optional[int] = None
+    id_inventario_destino: Optional[int] = None
+    id_ubicacion_origen: Optional[int] = None
+    id_ubicacion_destino: int
+    cantidad_afectada: int
+    observaciones: Optional[str] = None
+
+
+class DetalleMovimientoCreate(DetalleMovimientoBase):
+    pass
+
+
+class DetalleMovimientoUpdate(BaseModel):
+    id_ubicacion_destino: Optional[int] = None
+    cantidad_afectada: Optional[int] = None
+    observaciones: Optional[str] = None
+
+
+class DetalleMovimientoRead(DetalleMovimientoBase):
+    id_detalle_movimiento: int
     model_config = ConfigDict(from_attributes=True)

@@ -13,6 +13,10 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
+    # CORS — Configurable desde .env
+    CORS_ORIGINS: list[str] = ["http://localhost:5173", "http://localhost:3000", "http://127.0.0.1:5173"]
+    CORS_CREDENTIALS: bool = True
+
     # App
     PROJECT_NAME: str = "Control Inventario API"
     API_V1_STR: str = "/api/v1"

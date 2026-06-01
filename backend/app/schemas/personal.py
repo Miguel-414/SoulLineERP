@@ -44,7 +44,32 @@ class ResponsableObjetoBase(BaseModel):
 class ResponsableObjetoCreate(ResponsableObjetoBase):
     pass
 
+class ResponsableObjetoUpdate(BaseModel):
+    fecha_inicio: Optional[date] = None
+    fecha_fin: Optional[date] = None
+
 class ResponsableObjetoRead(ResponsableObjetoBase):
     id_responsable_objeto: int
+    fecha_registro: datetime
+    model_config = ConfigDict(from_attributes=True)
+
+
+# ── ResponsableUbicacion ──────────────────────────────────────────────────────
+
+class ResponsableUbicacionBase(BaseModel):
+    id_ubicacion: int
+    id_persona: int
+    fecha_inicio: date
+    fecha_fin: Optional[date] = None
+
+class ResponsableUbicacionCreate(ResponsableUbicacionBase):
+    pass
+
+class ResponsableUbicacionUpdate(BaseModel):
+    fecha_inicio: Optional[date] = None
+    fecha_fin: Optional[date] = None
+
+class ResponsableUbicacionRead(ResponsableUbicacionBase):
+    id_responsable_ubicacion: int
     fecha_registro: datetime
     model_config = ConfigDict(from_attributes=True)

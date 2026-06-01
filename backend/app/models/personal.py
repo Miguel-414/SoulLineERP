@@ -23,7 +23,8 @@ class Persona(Base):
     fecha_registro: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, server_default=func.now())
 
-    usuario: Mapped["Usuario | None"] = relationship("Usuario", back_populates="persona", uselist=False)  # type: ignore[name-defined]  # noqa: F821
+    usuario: Mapped["Usuario | None"] = relationship(
+        "Usuario", back_populates="persona", uselist=False)
 
 
 class ResponsableObjeto(Base):
@@ -41,6 +42,7 @@ class ResponsableObjeto(Base):
         DateTime, nullable=False, server_default=func.now())
 
     persona: Mapped["Persona"] = relationship("Persona")
+    inventario: Mapped["Inventario"] = relationship("Inventario")  # type: ignore[name-defined]  # noqa: F821
 
 
 class ResponsableUbicacion(Base):
@@ -58,6 +60,7 @@ class ResponsableUbicacion(Base):
         DateTime, nullable=False, server_default=func.now())
 
     persona: Mapped["Persona"] = relationship("Persona")
+    ubicacion: Mapped["Ubicacion"] = relationship("Ubicacion")  # type: ignore[name-defined]  # noqa: F821
 
 
 # Importación diferida para evitar circular imports
