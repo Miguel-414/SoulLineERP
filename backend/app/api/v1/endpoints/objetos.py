@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 
 from app.api.deps import get_db, get_current_user
 from app.crud import crud_inventario
@@ -130,7 +131,13 @@ def crear_item(
     _: Usuario = Depends(get_current_user),
 ):
     data.id_objeto = id_objeto
-    return crud_inventario.create_item_serializado(db, data)
+    try:
+        return crud_inventario.create_item_serializado(db, data)
+    except IntegrityError as e:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=str(e)
+        )
 
 
 @router.get("/{id_objeto}/items", response_model=list[ItemSerializadoRead])
