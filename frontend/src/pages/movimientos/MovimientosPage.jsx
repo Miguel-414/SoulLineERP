@@ -8,7 +8,7 @@ import {
   LoadingState,
   EmptyState,
   SearchBar,
-} from "../../components/ui";
+} from "../../components/Ui";
 
 const EMPTY_MOV = {
   fecha_movimiento: new Date().toISOString().slice(0, 10),

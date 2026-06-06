@@ -8,7 +8,7 @@ import {
   LoadingState,
   EmptyState,
   SearchBar,
-} from "../../components/ui";
+} from "../../components/Ui";
 
 const EMPTY = { nombre: "", descripcion: "", id_zona_padre: "" };
 

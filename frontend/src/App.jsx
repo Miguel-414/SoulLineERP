@@ -18,6 +18,7 @@ import UsuariosPage from "./pages/personas/UsuariosPage";
 import MovimientosPage from "./pages/movimientos/MovimientosPage";
 import TiposMovimientoPage from "./pages/movimientos/TiposMovimientoPage";
 import RolesPage from "./pages/admin/RolesPage";
+// todo Corregir los nombres de los archivos para que se pueda correr comodamente en linux
 
 // Ruta protegida: redirige al login si no hay sesión
 function PrivateRoute({ children }) {

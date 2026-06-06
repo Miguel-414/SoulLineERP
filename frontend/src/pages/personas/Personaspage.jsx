@@ -8,7 +8,7 @@ import {
   LoadingState,
   EmptyState,
   SearchBar,
-} from "../../components/ui";
+} from "../../components/Ui";
 
 const EMPTY_P = {
   primer_nombre: "",

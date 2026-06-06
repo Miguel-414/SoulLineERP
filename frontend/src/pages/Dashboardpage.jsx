@@ -6,7 +6,7 @@ import {
   personasApi,
   proveedoresApi,
 } from "../services/api";
-import { LoadingState } from "../components/ui";
+import { LoadingState } from "../components/Ui";
 
 export default function DashboardPage() {
   const { user } = useAuth();

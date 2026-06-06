@@ -9,7 +9,7 @@ import {
   EmptyState,
   EstadoBadge,
   SearchBar,
-} from "../../components/ui";
+} from "../../components/Ui";
 
 const EMPTY = {
   id_objeto: "",

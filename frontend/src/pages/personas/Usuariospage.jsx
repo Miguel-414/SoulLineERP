@@ -9,7 +9,7 @@ import {
   LoadingState,
   EmptyState,
   SearchBar,
-} from "../../components/ui";
+} from "../../components/Ui";
 
 export default function UsuariosPage() {
   const toast = useToast();
